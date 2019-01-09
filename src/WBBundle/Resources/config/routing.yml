@@ -1,0 +1,6 @@
+wb_addsystem:
+    path:     /add-system/{id}
+    defaults: { _controller: WBBundle:Default:AddSystem }
+wb_addcolor:
+    path:     /add-color
+    defaults: { _controller: WBBundle:Default:AddColor }

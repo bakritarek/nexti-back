@@ -1,0 +1,12 @@
+user_synchronise-all:
+    path:     /synchronize-all-users
+    defaults: { _controller: UserBundle:Default:SynchroniseAllUser }
+user_login:
+    path:     /login/{username}/{password}/{systemid}
+    defaults: { _controller: UserBundle:Login:Login }
+user_logout:
+    path:     /logout/{id}
+    defaults: { _controller: UserBundle:Login:Logout }
+user_still_loged:
+    path:     /still-logged/{id}
+    defaults: { _controller: UserBundle:Login:StillLoged }

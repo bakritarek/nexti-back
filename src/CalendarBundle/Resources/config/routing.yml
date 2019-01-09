@@ -1,0 +1,33 @@
+calendar_homepage:
+    path:     /synchro_data/{systemid}/{userid}
+    defaults: { _controller: CalendarBundle:Default:SynchroData }
+calendar_getStaffs:
+    path:     /get_staffs/{systemid}
+    defaults: { _controller: CalendarBundle:Staff:getStaffs }
+calendar_getStaffs_fromIds:
+    path:     /get_staffs_from_ids/{str}/{systemid}/{userid}
+    defaults: { _controller: CalendarBundle:Staff:getStaffFromIds }
+calendar_update_event:
+    path:     /update-event/{id}/{start}/{end}/{starttime}/{endtime}/{systemid}/{userid}
+    defaults: { _controller: CalendarBundle:ServiceCase:UpdateEvent }
+calendar_get_settings:
+    path:     /settings/{id}/{systemid}
+    defaults: { _controller: CalendarBundle:Default:getSettings }
+calendar_update_settings:
+    path:     /settings/update/{time}/{snap}/{timeout}/{commit}/{starttime}/{endtime}/{id}/{systemid}
+    defaults: { _controller: CalendarBundle:Default:updateSettings }
+calendar_commit:
+    path:     /commit/update/{systemid}/{userid}
+    defaults: { _controller: CalendarBundle:Default:Commit }
+calendar_change_staff:
+    path:     /change_staff/{staffId}/{servicecaseid}/{systemid}/{userid}/{start}
+    defaults: { _controller: CalendarBundle:Default:ChangeStaff }
+test:
+    path:     /test
+    defaults: { _controller: CalendarBundle:Default:TestJson }
+test2:
+    path:     /test2
+    defaults: { _controller: CalendarBundle:Default:Test2 }
+auto_logout:
+    path:     /auto_logout
+    defaults: { _controller: CalendarBundle:Default:AutoLogout }

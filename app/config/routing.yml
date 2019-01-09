@@ -1,0 +1,19 @@
+calendar:
+    resource: "@CalendarBundle/Resources/config/routing.yml"
+    prefix:   /calendar
+
+portal:
+    resource: "@PortalBundle/Resources/config/routing.yml"
+    prefix:   /portal
+
+user:
+    resource: "@UserBundle/Resources/config/routing.yml"
+    prefix:   /user
+
+wb:
+    resource: "@WBBundle/Resources/config/routing.yml"
+    prefix:   /wb
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation

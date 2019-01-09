@@ -1,0 +1,320 @@
+<?php
+
+namespace PortalBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use CalendarBundle\Entity\Settings;
+
+/**
+ * UserPortal
+ *
+ * @ORM\Table(name="accountuser")
+ * @ORM\Entity(repositoryClass="PortalBundle\Repository\UserPortalRepository")
+ */
+class UserPortal
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="systemid", type="integer")
+     */
+    private $systemid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=255)
+     */
+    private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="login", type="string", length=255)
+     */
+    private $login;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="userrole", type="string", length=255)
+     */
+    private $userrole;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="passwordsalt", type="string", length=255)
+     */
+    private $salt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255)
+     */
+    private $password;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set systemid
+     *
+     * @param string $systemid
+     *
+     * @return UserPortal
+     */
+    public function setSystemid($systemid)
+    {
+        $this->systemid = $systemid;
+
+        return $this;
+    }
+
+    /**
+     * Get systemid
+     *
+     * @return string
+     */
+    public function getSystemid()
+    {
+        return $this->systemid;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return UserPortal
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return UserPortal
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set login
+     *
+     * @param string $login
+     *
+     * @return UserPortal
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+
+        return $this;
+    }
+
+    /**
+     * Get login
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return UserPortal
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set userrole
+     *
+     * @param string $userrole
+     *
+     * @return UserPortal
+     */
+    public function setUserrole($userrole)
+    {
+        $this->userrole = $userrole;
+
+        return $this;
+    }
+
+    /**
+     * Get userrole
+     *
+     * @return string
+     */
+    public function getUserrole()
+    {
+        return $this->userrole;
+    }
+
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     *
+     * @return UserPortal
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Get salt
+     *
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return UserPortal
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->setting = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add setting
+     *
+     * @param \CalendarBundle\Entity\Settings $setting
+     *
+     * @return UserPortal
+     */
+    public function addSetting(\CalendarBundle\Entity\Settings $setting)
+    {
+        $this->setting[] = $setting;
+
+        return $this;
+    }
+
+    /**
+     * Remove setting
+     *
+     * @param \CalendarBundle\Entity\Settings $setting
+     */
+    public function removeSetting(\CalendarBundle\Entity\Settings $setting)
+    {
+        $this->setting->removeElement($setting);
+    }
+
+    /**
+     * Get setting
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSetting()
+    {
+        return $this->setting;
+    }
+}
