@@ -285,4 +285,28 @@ class ServiceCaseReschedule
     {
         return $this->satelliteid;
     }
+
+    /**
+     * Set reschedulenewstaffid
+     *
+     * @param string $reschedulenewstaffid
+     *
+     * @return ServiceCaseReschedule
+     */
+    public function setReschedulenewstaffid($reschedulenewstaffid)
+    {
+        $this->reschedulenewstaffid = $reschedulenewstaffid;
+
+        return $this;
+    }
+
+    /**
+     * Get reschedulenewstaffid
+     *
+     * @return string
+     */
+    public function getReschedulenewstaffid()
+    {
+        return $this->reschedulenewstaffid;
+    }
 }

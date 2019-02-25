@@ -69,7 +69,35 @@ class Settings
      */
     private $endTime;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     */
+    private $title;
 
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title2", type="string", length=255, nullable=true)
+     */
+    private $title2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title3", type="string", length=255, nullable=true)
+     */
+    private $title3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=255, nullable=true)
+     */
+    private $status;
 
     /**
      * Get id
@@ -81,79 +109,7 @@ class Settings
         return $this->id;
     }
 
-    /**
-     * Set key
-     *
-     * @param string $key
-     *
-     * @return Settings
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
 
-        return $this;
-    }
-
-    /**
-     * Get key
-     *
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * Set value
-     *
-     * @param string $value
-     *
-     * @return Settings
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-
-
-    /**
-     * Set user
-     *
-     * @param integer $user
-     *
-     * @return Settings
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return integer
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 
     /**
      * Set timeInterval
@@ -204,6 +160,30 @@ class Settings
     }
 
     /**
+     * Set commit
+     *
+     * @param string $commit
+     *
+     * @return Settings
+     */
+    public function setCommit($commit)
+    {
+        $this->commit = $commit;
+
+        return $this;
+    }
+
+    /**
+     * Get commit
+     *
+     * @return string
+     */
+    public function getCommit()
+    {
+        return $this->commit;
+    }
+
+    /**
      * Set timeout
      *
      * @param string $timeout
@@ -228,27 +208,27 @@ class Settings
     }
 
     /**
-     * Set commit
+     * Set user
      *
-     * @param string $commit
+     * @param integer $user
      *
      * @return Settings
      */
-    public function setCommit($commit)
+    public function setUser($user)
     {
-        $this->commit = $commit;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get commit
+     * Get user
      *
-     * @return string
+     * @return integer
      */
-    public function getCommit()
+    public function getUser()
     {
-        return $this->commit;
+        return $this->user;
     }
 
     /**
@@ -297,5 +277,101 @@ class Settings
     public function getEndTime()
     {
         return $this->endTime;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Settings
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set title2
+     *
+     * @param string $title2
+     *
+     * @return Settings
+     */
+    public function setTitle2($title2)
+    {
+        $this->title2 = $title2;
+
+        return $this;
+    }
+
+    /**
+     * Get title2
+     *
+     * @return string
+     */
+    public function getTitle2()
+    {
+        return $this->title2;
+    }
+
+    /**
+     * Set title3
+     *
+     * @param string $title3
+     *
+     * @return Settings
+     */
+    public function setTitle3($title3)
+    {
+        $this->title3 = $title3;
+
+        return $this;
+    }
+
+    /**
+     * Get title3
+     *
+     * @return string
+     */
+    public function getTitle3()
+    {
+        return $this->title3;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Settings
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

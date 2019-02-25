@@ -286,6 +286,11 @@ class servicecase
     private $company;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TaskType", inversedBy="servicecase")
+     */
+    private $tasktypes;
+
+    /**
      * Get id
      *
      * @return int
@@ -1246,5 +1251,29 @@ class servicecase
     public function getCompany()
     {
         return $this->company;
+    }
+
+    /**
+     * Set tasktypes
+     *
+     * @param \CalendarBundle\Entity\TaskType $tasktypes
+     *
+     * @return servicecase
+     */
+    public function setTasktypes(\CalendarBundle\Entity\TaskType $tasktypes = null)
+    {
+        $this->tasktypes = $tasktypes;
+
+        return $this;
+    }
+
+    /**
+     * Get tasktypes
+     *
+     * @return \CalendarBundle\Entity\TaskType
+     */
+    public function getTasktypes()
+    {
+        return $this->tasktypes;
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6ff5c44b-40c6-41e0-b527-c8dde20da917" name="Nexti-Back" url="http://192.168.100.136">
+        <fileTransfer host="192.168.100.136" port="22" rootFolder="/html/nexti" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

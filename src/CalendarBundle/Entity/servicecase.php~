@@ -286,6 +286,11 @@ class servicecase
     private $company;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TaskType", inversedBy="servicecase")
+     */
+    private $tasktypes;
+
+    /**
      * Get id
      *
      * @return int

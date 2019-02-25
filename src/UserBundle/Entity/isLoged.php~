@@ -132,4 +132,28 @@ class isLoged
     {
         return $this->systemid;
     }
+
+    /**
+     * Set lastUpdate
+     *
+     * @param string $lastUpdate
+     *
+     * @return isLoged
+     */
+    public function setLastUpdate($lastUpdate)
+    {
+        $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdate
+     *
+     * @return string
+     */
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
+    }
 }

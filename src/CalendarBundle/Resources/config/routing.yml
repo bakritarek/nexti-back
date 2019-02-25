@@ -13,8 +13,17 @@ calendar_update_event:
 calendar_get_settings:
     path:     /settings/{id}/{systemid}
     defaults: { _controller: CalendarBundle:Default:getSettings }
+calendar_get_titles:
+    path:     /settings/titles-{systemid}
+    defaults: { _controller: CalendarBundle:Default:getTitles }
+calendar_get_titles_con:
+    path:     /settings/titles_con-{systemid}/{title1}/{titlex}
+    defaults: { _controller: CalendarBundle:Default:getTitlesCon }
+calendar_get_title:
+    path:     /settings/title-{systemid}-{servicecaseid}-{title}
+    defaults: { _controller: CalendarBundle:Default:getTitle }
 calendar_update_settings:
-    path:     /settings/update/{time}/{snap}/{timeout}/{commit}/{starttime}/{endtime}/{id}/{systemid}
+    path:     /settings/update/{time}/{snap}/{timeout}/{commit}/{starttime}/{endtime}/{title}/{title2}/{title3}/{status}/{id}/{systemid}
     defaults: { _controller: CalendarBundle:Default:updateSettings }
 calendar_commit:
     path:     /commit/update/{systemid}/{userid}
@@ -31,3 +40,6 @@ test2:
 auto_logout:
     path:     /auto_logout
     defaults: { _controller: CalendarBundle:Default:AutoLogout }
+rgb_to_hex:
+    path:     /status_from_url/{url}/{systemid}/{userid}
+    defaults: { _controller: CalendarBundle:Default:StatusFromUrl }

@@ -9,6 +9,8 @@ use CalendarBundle\Entity\ServiceCaseStaff;
 use CalendarBundle\Entity\Settings;
 use CalendarBundle\Entity\Staff;
 use CalendarBundle\Entity\StaffColor;
+use CalendarBundle\Entity\TaskType;
+use CalendarBundle\Entity\Titles;
 use JMS\Serializer\SerializerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -27,9 +29,19 @@ use Symfony\Component\VarDumper\Tests\Cloner\DataTest;
 use UserBundle\Entity\isLoged;
 use WBBundle\Entity\Color;
 
+/**
+ * Class DefaultController
+ * @package CalendarBundle\Controller
+ */
 class DefaultController extends Controller
 {
-   public function SynchroDataAction($systemid, LoggerInterface $logger, $userid) {
+    /**
+     * @param $systemid
+     * @param LoggerInterface $logger
+     * @param $userid
+     * @return JsonResponse
+     */
+    public function SynchroDataAction($systemid, LoggerInterface $logger, $userid) {
 
 
        $em = $this->getDoctrine()->getManager('db'.$systemid);
@@ -55,6 +67,9 @@ class DefaultController extends Controller
            $numDeleted = $q->execute();
 
            $q = $em->createQuery('delete from CalendarBundle:ClientCompany');
+           $numDeleted = $q->execute();
+
+           $q = $em->createQuery('delete from CalendarBundle:TaskType');
            $numDeleted = $q->execute();
 
 
@@ -128,6 +143,42 @@ class DefaultController extends Controller
                }
                $em->flush();
 
+               //TaskType
+
+               $url = 'http://192.168.100.138:8090/Service/Replicator/GetDataDump?Instance=default&DeviceID=TESTUDID&Raw=true&format=json&DeviceVersion=1&Device=iphone&table=servicecasetype&limit=1000';
+
+               $json = file_get_contents($url);
+
+               if ($json) {
+                   $json = '['.$json.']';
+                   $words = ['\n','\t','\r'];
+                   $json = str_replace($words,' ',$json);
+                   $json = str_replace('}','},',$json);
+                   $length = strlen($json) -2;
+                   $json = substr($json,0, $length);
+
+
+                   $json = $json.']';
+
+                   $js = json_decode($json);
+
+                   foreach ($js as $obj) {
+
+                       $obj = get_object_vars($obj);
+
+                       $taskType = new TaskType();
+
+                       $taskType->setDescription($obj['description']);
+                       $taskType->setTasktype($obj['tasktype']);
+
+                       $em->persist($taskType);
+
+
+                   }
+
+
+                   $em->flush();
+               }
                //ServiceCase
 
                $url = 'http://192.168.100.138:8090/Service/Replicator/GetDataDump?Instance=default&DeviceID=TESTUDID&Raw=true&format=json&DeviceVersion=1&Device=iphone&table=servicecase&limit=1000';
@@ -154,6 +205,9 @@ class DefaultController extends Controller
                        $scstart = new \DateTime($obj['startdate']);
                        $dateDiff = date_diff($now, $scstart);
                        if ($dateDiff->m < 2) {
+
+                           $taskType = $em->getRepository(TaskType::class)->findOneBy(['tasktype' => $obj['tasktype']]);
+
                            $servicecase = new servicecase();
 
                            $servicecase->setStartdate($obj['startdate']);
@@ -167,6 +221,8 @@ class DefaultController extends Controller
                            $servicecase->setPlannedfor($obj['plannedfor']);
                            $servicecase->setGlobalid($obj['id']);
                            $servicecase->setCompanyno($obj['companyno']);
+                           $servicecase->setStatus($obj['status']);
+                           $servicecase->setTasktypes($taskType);
 
                            $Staff = $em->getRepository(Staff::class)->findOneBy(['staffid'=>$obj['plannedfor']]);
                            $servicecase->setStaff($Staff);
@@ -276,6 +332,10 @@ class DefaultController extends Controller
                            $servicecase->setLatestendtime($obj['reschedulenewendtime']);
                            $servicecase->setSatelliteid($obj['satelliteid']);
 
+                           $staff = $em->getRepository(Staff::class)->findOneBy(['staffid'=>$obj['reschedulenewstaffid']]);
+                           if ($staff) {
+                               $servicecase->setStaff($staff);
+                           }
                            $em->persist($servicecase);
                        }
 
@@ -289,11 +349,7 @@ class DefaultController extends Controller
                        $servicecaseR->setSatelliteid($obj['satelliteid']);
                        $servicecaseR->setReschedulenewstaffid($obj['reschedulenewstaffid']);
 
-                       $staff = $em->getRepository(Staff::class)->findOneBy(['staffid'=>$obj['reschedulenewstaffid']]);
-                       if ($staff) {
-                           $servicecase->setStaff($staff);
-                           $em->persist($servicecase);
-                       }
+
 
                        $em->persist($servicecaseR);
 
@@ -422,7 +478,10 @@ class DefaultController extends Controller
        */
    }
 
-   public function TestJsonAction() {
+    /**
+     * @return JsonResponse
+     */
+    public function TestJsonAction() {
 
        $url = 'http://192.168.100.138:8090/Service/Replicator/GetDataDump?Instance=default&DeviceID=TESTUDID&Raw=true&format=json&DeviceVersion=1&Device=iphone&table=servicecase&limit=10';
 
@@ -456,7 +515,10 @@ class DefaultController extends Controller
 
    }
 
-   public function Test2Action() {
+    /**
+     * @return Response
+     */
+    public function Test2Action() {
 
        $url = 'http://192.168.100.136/nexti/web/app_dev.php/calendar/test';
 
@@ -472,7 +534,12 @@ class DefaultController extends Controller
        return new Response('ss');
    }
 
-   public function getSettingsAction($id, $systemid) {
+    /**
+     * @param $id
+     * @param $systemid
+     * @return Response
+     */
+    public function getSettingsAction($id, $systemid) {
        $em = $this->getDoctrine()->getManager('db'.$systemid);
 
        $settings = $em->getRepository(Settings::class)->findOneBy(['user'=>$id]);
@@ -483,7 +550,82 @@ class DefaultController extends Controller
        return $response = new Response($jsonObject);
    }
 
-   public function updateSettingsAction($time, $snap, $timeout,$commit,$starttime,$endtime, $id, $systemid) {
+   public function getTitlesAction($systemid) {
+        $em = $this->getDoctrine()->getManager('db'.$systemid);
+
+        $titles = $em->getRepository(Titles::class)->findAll();
+
+        $serializer = SerializerBuilder::create()->build();
+        $jsonObject = $serializer->serialize($titles, 'json');
+
+       return $response = new Response($jsonObject);
+   }
+
+    public function getTitlesConAction($systemid, $title1, $titlex) {
+        $em = $this->getDoctrine()->getManager('db'.$systemid);
+
+        $titles = $em->getRepository(Titles::class)->getTitles($title1, $titlex);
+
+        $serializer = SerializerBuilder::create()->build();
+        $jsonObject = $serializer->serialize($titles, 'json');
+
+        return $response = new Response($jsonObject);
+    }
+
+    public function getTitleAction($systemid,$servicecaseid,  $title) {
+       $em = $this->getDoctrine()->getManager('db'.$systemid);
+
+       $servicecase = $em->getRepository(servicecase::class)->find($servicecaseid);
+       $result = new JsonResponse();
+       if ($title === 'company_name') {
+           if ($servicecase->getCompany())
+               return $result->setData($servicecase->getCompany()->getName());
+           else
+               return $result->setData('');
+       }
+
+
+
+       if ($title === 'staff_name')
+           return $result->setData($servicecase->getStaff()->getName());
+
+       if ($title === 'tasktype' && $servicecase->getTasktypes())
+           return $result->setData($servicecase->getTasktypes()->getDescription());
+
+       if ($title === 'company_no')
+           return $result->setData($servicecase->getCompanyno());
+
+       if ($title === 'servicecase_no')
+            return $result->setData($servicecase->getServicecaseno());
+
+       if ($title === 'servicecase_no')
+            return $result->setData($servicecase->getServicecaseno());
+
+       if ($title === 'shortdescription')
+            return $result->setData($servicecase->getShortdescription());
+
+       if ($title === 'longdescription')
+            return $result->setData($servicecase->getLongdescription());
+
+
+       return $result->setData(' ');
+
+    }
+
+    /**
+     * @param $time
+     * @param $snap
+     * @param $timeout
+     * @param $commit
+     * @param $starttime
+     * @param $endtime
+     * @param $title
+     * @param $status
+     * @param $id
+     * @param $systemid
+     * @return Response
+     */
+    public function updateSettingsAction($time, $snap, $timeout, $commit, $starttime, $endtime, $title, $title2, $title3, $status, $id, $systemid) {
        $em = $this->getDoctrine()->getManager('db'.$systemid);
        $emDefault = $this->getDoctrine()->getManager('default');
        $setting = $em->getRepository(Settings::class)->findOneBy(['user'=>$id]);
@@ -494,12 +636,18 @@ class DefaultController extends Controller
        $emDefault->persist($isLoged);
        $emDefault->flush();
 
+
+
        $setting->setTimeInterval($time);
        $setting->setSnap($snap);
        $setting->setCommit($commit);
        $setting->setTimeout($timeout);
        $setting->setStartTime($starttime);
        $setting->setEndTime($endtime);
+       $setting->setStatus($status);
+       $setting->setTitle($title);
+       $setting->setTitle2($title2);
+       $setting->setTitle3($title3);
 
 
        $em->persist($setting);
@@ -511,7 +659,12 @@ class DefaultController extends Controller
        return $response = new Response($jsonObject);
    }
 
-   public function CommitAction( $systemid, $userid) {
+    /**
+     * @param $systemid
+     * @param $userid
+     * @return JsonResponse
+     */
+    public function CommitAction($systemid, $userid) {
 
 
        $emPortal = $this->getDoctrine()->getManager('portal');
@@ -526,18 +679,6 @@ class DefaultController extends Controller
        $companyUsers = $emPortal->getRepository(companyuser::class)->findBy(['isblocked'=>false]);
         $devices = $emPortal->getRepository(Device::class)->findBy(['companyid'=>$systemid]);
 
-        /*
-        foreach ($companyUsers as $companyUser) {
-            foreach ($devices as $device) {
-                if ($device->getUserid() == $companyUser->getId()) {
-                    $dev = $device;
-                }
-            }
-        }
-
-        $udid = $dev->getUdid();
-
-        */
 
        $url = "http://192.168.100.138:8090/Service/Replicator/ApplyUpdate?RequestID=245&compressed=yes&AppVersion=4.9.1%20(58)&raw=no&checksum=md5&Instance=default&DeviceVersion=5&format=csv&OSVersion=12.1&DeviceID=TESTUDID&DeviceType=iphone&MaxTranCount=50&LastTranID=9930229";
 
@@ -660,7 +801,11 @@ class DefaultController extends Controller
 
    }
 
-   public function AutoLogoutAction(KernelInterface $kernel) {
+    /**
+     * @param KernelInterface $kernel
+     * @return JsonResponse
+     */
+    public function AutoLogoutAction(KernelInterface $kernel) {
        /*
        $em = $this->getDoctrine()->getManager('default');
 
@@ -683,7 +828,15 @@ class DefaultController extends Controller
        return $response->setData(['mess'=>$outputs]);
    }
 
-   public function ChangeStaffAction($staffId, $servicecaseid, $systemid, $userid, $start) {
+    /**
+     * @param $staffId
+     * @param $servicecaseid
+     * @param $systemid
+     * @param $userid
+     * @param $start
+     * @return JsonResponse
+     */
+    public function ChangeStaffAction($staffId, $servicecaseid, $systemid, $userid, $start) {
        $em = $this->getDoctrine()->getManager('db'.$systemid);
        $emDefault = $this->getDoctrine()->getManager('default');
 
@@ -715,6 +868,23 @@ class DefaultController extends Controller
 
        return $response->setData($result);
 
+   }
+
+    /**
+     * @param $url
+     * @param $systemid
+     * @param $userid
+     * @return JsonResponse
+     */
+    public function StatusFromUrlAction($url, $systemid, $userid) {
+
+      $em = $this->getDoctrine()->getManager('db'.$systemid);
+      $event = $em->getRepository(servicecase::class)->find($url);
+
+      $array = ['id' => $url, 'status' => $event->getStatus()];
+      $response = new JsonResponse();
+
+      return $response->setData($array);
    }
 
 }

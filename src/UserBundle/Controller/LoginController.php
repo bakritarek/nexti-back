@@ -61,6 +61,8 @@ class LoginController extends Controller
                             $settings->setTimeInterval('00:01:00');
                             $settings->setTimeout(15000);
                             $settings->setCommit('0');
+                            $settings->setStatus('0');
+                            $settings->setTitle('company');
                             $emDb->persist($settings);
                             $emDb->flush();
                         }
