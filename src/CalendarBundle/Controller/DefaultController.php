@@ -80,17 +80,6 @@ class DefaultController extends Controller
 
            $json = file_get_contents($url);
            if ($json) {
-               $json = '['.$json.']';
-               $words = ['\n','\t','\r'];
-               $json = str_replace($words,' ',$json);
-               $json = str_replace('null','""',$json);
-               $json = str_replace('}','},',$json);
-               $length = strlen($json) -2;
-               $json = substr($json,0, $length);
-
-
-               $json = $json.']';
-
                $js = json_decode($json);
                $i=1;
                foreach ($js as $obj) {
@@ -150,15 +139,6 @@ class DefaultController extends Controller
                $json = file_get_contents($url);
 
                if ($json) {
-                   $json = '['.$json.']';
-                   $words = ['\n','\t','\r'];
-                   $json = str_replace($words,' ',$json);
-                   $json = str_replace('}','},',$json);
-                   $length = strlen($json) -2;
-                   $json = substr($json,0, $length);
-
-
-                   $json = $json.']';
 
                    $js = json_decode($json);
 
@@ -186,16 +166,6 @@ class DefaultController extends Controller
                $json = file_get_contents($url);
 
                if ($json) {
-                   $json = '['.$json.']';
-                   $words = ['\n','\t','\r'];
-                   $json = str_replace($words,' ',$json);
-                   $json = str_replace('null','""',$json);
-                   $json = str_replace('}','},',$json);
-                   $length = strlen($json) -2;
-                   $json = substr($json,0, $length);
-
-
-                   $json = $json.']';
 
                    $js = json_decode($json);
                    $now = new \DateTime();
@@ -306,15 +276,6 @@ class DefaultController extends Controller
                $json = file_get_contents($url);
 
                if ($json) {
-                   $json = '['.$json.']';
-                   $words = ['\n','\t','\r'];
-                   $json = str_replace($words,' ',$json);
-                   $json = str_replace('}','},',$json);
-                   $length = strlen($json) -2;
-                   $json = substr($json,0, $length);
-
-
-                   $json = $json.']';
 
                    $js = json_decode($json);
 
@@ -373,109 +334,6 @@ class DefaultController extends Controller
        $response = new JsonResponse();
        return $response->setData(['message'=>'success']);
 
-
-       //return new Response($js);
-
-       /*
-       $em = $this->getDoctrine()->getManager('db'.$systemid);
-
-       $log = '';
-       $log=$log. 'Start at : '.gmdate('Y-m-d H:i:s').';';
-       ini_set('memory_limit', '-1');
-       $url = 'http://192.168.100.174:8000/wb/getdata/servicecase';
-
-       $getDataFromServerB = new \DateTime();
-
-
-       $file = file_get_contents($url);
-
-       $getDataFromServerF = new \DateTime();
-       $dateDiff = date_diff($getDataFromServerB,$getDataFromServerF);
-
-       $log = $log.'Get Data from server 6500 rows : '.$dateDiff->s.' s;';
-
-       $objs = json_decode($file);
-
-
-       $result = [];
-       $now = new \DateTime();
-       $insertingIntoDBB = new \DateTime();
-      foreach ($objs as $obj) {
-          $obj = (get_object_vars($obj));
-          if (isset($obj['startdate']))
-              $startDate = $obj['startdate'];
-          else
-              $startDate = '';
-
-          if (isset($obj['starttime']))
-              $startTime = $obj['starttime'];
-          else
-              $startDate = '';
-
-          if (isset($obj['tasktype']))
-              $tasktype = $obj['tasktype'];
-          else
-              $tasktype = '';
-
-          if (isset($obj['shortdescription']))
-              $shortDiscription = $obj['shortdescription'];
-          else
-              $shortDiscription = '';
-
-          if (isset($obj['longdescription']))
-              $longDescription = $obj['longdescription'];
-          else
-              $longDescription = '';
-
-          if (isset($obj['servicecaseno']))
-              $servicecaseno = $obj['servicecaseno'];
-          else
-              $servicecaseno = '';
-
-          if (isset($obj['latestenddate']))
-              $enDate = $obj['latestenddate'];
-          else
-              $enDate = '';
-
-          if (isset($obj['latestendtime']))
-              $endTime = $obj['latestendtime'];
-          else
-              $endTime = '';
-
-
-          if (isset($obj['startdate'])) {
-              $scstart = new \DateTime($obj['startdate']);
-              $dateDiff = date_diff($now, $scstart);
-              if ($dateDiff->m < 2) {
-                  $servicecase = new servicecase();
-
-                  $servicecase->setStartdate($startDate);
-                  $servicecase->setStarttime($startTime);
-                  $servicecase->setTasktype($tasktype);
-                  $servicecase->setShortdescription($shortDiscription);
-                  $servicecase->setLongdescription($longDescription);
-                  $servicecase->setServicecaseno($servicecaseno);
-                  $servicecase->setLatestenddate($enDate);
-                  $servicecase->setLatestendtime($endTime);
-
-                  $em->persist($servicecase);
-              }
-
-          }
-      }
-      $em->flush();
-      $insertingIntoDBF = new \DateTime();
-
-      $DDiff = date_diff($insertingIntoDBB,$insertingIntoDBF);
-      $log = $log.'Inserting Into Data Base : '.$DDiff->s.' s;';
-
-      $log = explode(';', $log);
-
-       $response = new JsonResponse();
-
-       return $response->setData($log);
-
-       */
    }
 
     /**
